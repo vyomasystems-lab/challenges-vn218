@@ -13,9 +13,9 @@ async def test_mux(dut):
         dut.sel.value = i
         setattr(getattr(dut,f"inp{i}"),"value",2)
         await Timer(2, units='ns')        
-        assert dut.out.value == 2, f"Adder result is incorrect: {dut.out.value} != 2"
         print(dut.out.value)
         print(dut.sel.value)
+        assert dut.out.value == 2, f"Adder result is incorrect: {dut.out.value} != 2"
         setattr(getattr(dut,f"inp{i}"),"value",0)
 
 
