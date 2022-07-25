@@ -85,6 +85,25 @@ end
 ```
 When in state *SEQ_101*, if *inp_bit == 0* then the state should change to *SEQ_10* i.e. *next_state = SEQ_10* . Instead, it is being changed to *IDLE*.
 
+## Test Scenario
+- Input Sequence : ...01011011
+- Expected Output: seq_seen = 1
+- Observed Output in the DUT dut.seq_seen.value = 0
+
+Output mismatches for the above inputs proving that there is a design bug
+
+## Design Bug
+Based on the above test input and analysing the design, we see the following
+
+```
+SEQ_1011:
+begin
+  next_state = IDLE;   =====> bug
+end
+
+```
+When in state *SEQ_1011*, the state is being changed to *IDLE* irrespective of the input, which is wrong. If *inp_bit == 0* then the state should change to *SEQ_10* i.e. *next_state = SEQ_10* Also,  if *inp_bit == 1* then the state should change to *SEQ_1* i.e. *next_state = SEQ_1*.
+
 ## Design Fix
 Updating the design and re-running the test makes the test pass.
 
