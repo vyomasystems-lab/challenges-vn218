@@ -36,7 +36,7 @@ async def test_seq_bug1(dut):
         await RisingEdge(dut.clk)
         print(inputs)
         if (len(inputs) > 4):
-            if (inputs[-5] == 1 and inputs[-4] == 0 and inputs[-3] == 1 and inputs[-2] == 1):
+            if (inputs[-5:-1] == [1,0,1,1]):
                 assert dut.seq_seen.value == 1, f"Output is incorrect: {dut.seq_seen.value} != 1"
             else:
                 assert dut.seq_seen.value == 0, f"Output is incorrect: {dut.seq_seen.value} != 0"

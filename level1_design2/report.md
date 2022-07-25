@@ -6,25 +6,45 @@ The verification environment is setup using [Vyoma's UpTickPro](https://vyomasys
 
 ## Verification Environment
 
-The [CoCoTb](https://www.cocotb.org/) based Python test is developed as explained. The test drives inputs to the Design Under Test (seq_detect module here) which takes in 1-bit inputs *inp_bit*  and gives 5-bit output *sum*
+The test drives inputs to the Design Under Test which takes in 1-bit input ( apart from *clk* and *reset* ) *inp_bit*  and gives 1-bit output *seq_seen*. 
 
-The values are assigned to the input port using 
+A 1000 bit long random sequence of 1s and 0s is assigned to the input signal at every falling clock edge using 
 ```
-dut.a.value = 7
-dut.b.value = 5
+   for i in range(1000):
+        await FallingEdge(dut.clk)
+        in_bit = random.randint(0,1)
+        dut.inp_bit.value = in_bit
 ```
+Also, last 9 bits of the sequence are stored in a list *inputs*
 
-The assert statement is used for comparing the adder's outut to the expected value.
+The assert statement is used to check whether *seq_seen* goes high when the sequence 1011 is entered and also to check whether it remains low otherwise
+
+The assert statement
+
+```
+if (len(inputs) > 4):
+    if (inputs[-5:-1] == [1,0,1,1]):
+        assert dut.seq_seen.value == 1, f"Output is incorrect: {dut.seq_seen.value} != 1"
+    else:
+        assert dut.seq_seen.value == 0, f"Output is incorrect: {dut.seq_seen.value} != 0"
+else:
+        assert dut.seq_seen.value == 0, f"Output is incorrect: {dut.seq_seen.value} != 0"
+
+```
+*len(inputs) > 4* is checked to make sure atleast 4 bits have been entered in order to avoid index out of range error.
+
+*inputs[-5:-1]* is checked instead of *inputs[-4:]* because *seq_seen* goes high one clock cycle after the pattern 1011 is inputed  
+
 
 The following error is seen:
 ```
-assert dut.sum.value == A+B, "Adder result is incorrect: {A} + {B} != {SUM}, expected value={EXP}".format(
-                     AssertionError: Adder result is incorrect: 7 + 5 != 2, expected value=12
+assert dut.seq_seen.value == 1, f"Output is incorrect: {dut.seq_seen.value} != 1"
+                     AssertionError: Output is incorrect: 0 != 1
 ```
-## Test Scenario **(Important)**
-- Test Inputs: a=7 b=5
-- Expected Output: sum=12
-- Observed Output in the DUT dut.sum=2
+## Test Scenario
+- Input Sequence : ...01111011
+- Expected Output: seq_seen = 1
+- Observed Output in the DUT dut.seq_seen.value = 0
 
 Output mismatches for the above inputs proving that there is a design bug
 
@@ -32,12 +52,38 @@ Output mismatches for the above inputs proving that there is a design bug
 Based on the above test input and analysing the design, we see the following
 
 ```
- always @(a or b) 
-  begin
-    sum = a - b;             ====> BUG
-  end
+SEQ_1:
+begin
+  if(inp_bit == 1)
+    next_state = IDLE;   ====> bug
+  else
+    next_state = SEQ_10;
+end
+
 ```
-For the adder design, the logic should be ``a + b`` instead of ``a - b`` as in the design code.
+When in state *SEQ_1*, if *inp_bit == 1* then the state should not change i.e. *next_state = SEQ_1* . Instead, it is being changed to *IDLE*.
+
+## Test Scenario
+- Input Sequence : ...11101011
+- Expected Output: seq_seen = 1
+- Observed Output in the DUT dut.seq_seen.value = 0
+
+Output mismatches for the above inputs proving that there is a design bug
+
+## Design Bug
+Based on the above test input and analysing the design, we see the following
+
+```
+SEQ_101:
+begin
+  if(inp_bit == 1)
+    next_state = SEQ_1011;
+  else
+    next_state = IDLE;    =====> bug
+end
+
+```
+When in state *SEQ_101*, if *inp_bit == 0* then the state should change to *SEQ_10* i.e. *next_state = SEQ_10* . Instead, it is being changed to *IDLE*.
 
 ## Design Fix
 Updating the design and re-running the test makes the test pass.
