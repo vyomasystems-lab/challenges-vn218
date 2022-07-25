@@ -24,3 +24,22 @@ async def test_seq_bug1(dut):
     await FallingEdge(dut.clk)
 
     cocotb.log.info('#### CTB: Develop your test here! ######')
+
+    inputs = []
+    for i in range(10000):
+        await FallingEdge(dut.clk)
+        in_bit = random.randint(0,1)
+        dut.inp_bit.value = in_bit
+        inputs.append(in_bit)
+        if (len(inputs) > 9):
+            inputs.pop(0)
+        await RisingEdge(dut.clk)
+        print(inputs)
+        if (len(inputs) > 4):
+            if (inputs[-5] == 1 and inputs[-4] == 0 and inputs[-3] == 1 and inputs[-2] == 1):
+                assert dut.seq_seen.value == 1, f"Output is incorrect: {dut.seq_seen.value} != 1"
+            else:
+                assert dut.seq_seen.value == 0, f"Output is incorrect: {dut.seq_seen.value} != 0"
+        else:
+                assert dut.seq_seen.value == 0, f"Output is incorrect: {dut.seq_seen.value} != 0"
+        
