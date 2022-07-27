@@ -42,9 +42,9 @@ def run_test(dut):
     FSL =  0b00000100000000000001000000110011
     FSR =  0b00000100000000000101000000110011
     for i in range(1000):    
-        mav_putvalue_src1 = random.randint(0,2**32-1)
+        mav_putvalue_src1 = 0
         mav_putvalue_src2 = 33
-        mav_putvalue_src3 = random.randint(0,2**32-1)
+        mav_putvalue_src3 = 0
         mav_putvalue_instr = FSR
 
         # expected output from the model
