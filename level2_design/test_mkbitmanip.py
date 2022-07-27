@@ -41,7 +41,7 @@ def run_test(dut):
     CMOV = 0b00000110000000000101000000110011
     FSL =  0b00000110000000000001000000110011
     mav_putvalue_src1 = 0x5
-    mav_putvalue_src2 = 0x1
+    mav_putvalue_src2 = 33
     mav_putvalue_src3 = 0x0
     mav_putvalue_instr = FSL
 
