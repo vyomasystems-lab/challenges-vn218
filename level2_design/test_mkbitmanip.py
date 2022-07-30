@@ -62,30 +62,31 @@ def run_test(dut):
     FSR =  0b0000010_00000_00000_101_000000_110011
 
     instr = [ANDN,ORN,XNOR,SLO,SRO,ROL,ROR,SH1ADD,SH2ADD,SH3ADD,SBCLR,SBSET,SBINV,SBEXT,GORC,GREV,CMIX]
-    for i in range(1000):    
-        mav_putvalue_src1 = 0
-        mav_putvalue_src2 = 33
-        mav_putvalue_src3 = 0
-        mav_putvalue_instr = FSR
+    for ins in range(1):
+        for i in range(1):    
+            mav_putvalue_src1 = 0x0 #random.randint(0,(2**32) - 1)
+            mav_putvalue_src2 = 0x1 #random.randint(0,(2**32) - 1)
+            mav_putvalue_src3 = 0x1 #random.randint(0,(2**32) - 1)
+            mav_putvalue_instr = ANDN
 
-        # expected output from the model
-        expected_mav_putvalue = bitmanip(mav_putvalue_instr, mav_putvalue_src1, mav_putvalue_src2, mav_putvalue_src3)
+            # expected output from the model
+            expected_mav_putvalue = bitmanip(mav_putvalue_instr, mav_putvalue_src1, mav_putvalue_src2, mav_putvalue_src3)
 
-        # driving the input transaction
-        dut.mav_putvalue_src1.value = mav_putvalue_src1
-        dut.mav_putvalue_src2.value = mav_putvalue_src2
-        dut.mav_putvalue_src3.value = mav_putvalue_src3
-        dut.EN_mav_putvalue.value = 1
-        dut.mav_putvalue_instr.value = mav_putvalue_instr
-    
-        yield Timer(4) 
-
-        # obtaining the output
-        dut_output = dut.mav_putvalue.value
-
-        cocotb.log.info(f'DUT OUTPUT={hex(dut_output)}')
-        cocotb.log.info(f'EXPECTED OUTPUT={hex(expected_mav_putvalue)}')
+            # driving the input transaction
+            dut.mav_putvalue_src1.value = mav_putvalue_src1
+            dut.mav_putvalue_src2.value = mav_putvalue_src2
+            dut.mav_putvalue_src3.value = mav_putvalue_src3
+            dut.EN_mav_putvalue.value = 1
+            dut.mav_putvalue_instr.value = mav_putvalue_instr
         
-        # comparison
-        error_message = f'Value mismatch DUT = {hex(dut_output)} does not match MODEL = {hex(expected_mav_putvalue)}'
-        assert dut_output == expected_mav_putvalue, error_message
+            yield Timer(4) 
+
+            # obtaining the output
+            dut_output = dut.mav_putvalue.value
+
+            cocotb.log.info(f'DUT OUTPUT={hex(dut_output)}')
+            cocotb.log.info(f'EXPECTED OUTPUT={hex(expected_mav_putvalue)}')
+            
+            # comparison
+            error_message = f'Value mismatch DUT = {hex(dut_output)} does not match MODEL = {hex(expected_mav_putvalue)} for inputs \n mav_putvalue_src1 = {hex(mav_putvalue_src1)} \n mav_putvalue_src2 = {hex(mav_putvalue_src2)} \n mav_putvalue_src3 = {hex(mav_putvalue_src3)} '
+            assert dut_output == expected_mav_putvalue, error_message
