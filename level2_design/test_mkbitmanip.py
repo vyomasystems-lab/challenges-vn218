@@ -60,6 +60,8 @@ def run_test(dut):
     CMOV = 0b0000011_00000_00000_101_00000_0110011
     FSL =  0b0000010_00000_00000_001_000000_110011
     FSR =  0b0000010_00000_00000_101_000000_110011
+
+    instr = [ANDN,ORN,XNOR,SLO,SRO,ROL,ROR,SH1ADD,SH2ADD,SH3ADD,SBCLR,SBSET,SBINV,SBEXT,GORC,GREV,CMIX]
     for i in range(1000):    
         mav_putvalue_src1 = 0
         mav_putvalue_src2 = 33
