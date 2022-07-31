@@ -76,12 +76,12 @@ def run_test(dut):
 
     
 
-    instr = [ORN,XNOR,SLO,SRO,ROL,ROR,SH1ADD,SH2ADD,SH3ADD,SBCLR,SBSET,SBINV,SBEXT,GORC,GREV,CMIX]
+    instr = [ORN,XNOR,SLO,SRO,ROL,ROR,SH1ADD,SH2ADD,SH3ADD,SBCLR,SBSET,SBINV,SBEXT,GORC,GREV,CMIX,CLZ,CTZ,PCNT,SEXTB,SEXTH,CRC32B,CRC32H,CRC32W,CRC32CB,CRC32CH,CRC32CW]
     for ins in instr:
         for i in range(1000):    
-            mav_putvalue_src1 = 0x1 #random.randint(0,(2**32) - 1)
-            mav_putvalue_src2 = 0x1 #random.randint(0,(2**32) - 1)
-            mav_putvalue_src3 = 0x1 #random.randint(0,(2**32) - 1)
+            mav_putvalue_src1 = random.randint(0,(2**32) - 1)
+            mav_putvalue_src2 = random.randint(0,(2**32) - 1)
+            mav_putvalue_src3 = random.randint(0,(2**32) - 1)
             mav_putvalue_instr = ins
 
             # expected output from the model
