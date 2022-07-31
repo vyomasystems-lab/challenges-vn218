@@ -61,13 +61,13 @@ def run_test(dut):
     FSL =  0b0000010_00000_00000_001_000000_110011
     FSR =  0b0000010_00000_00000_101_000000_110011
 
-    instr = [ANDN,ORN,XNOR,SLO,SRO,ROL,ROR,SH1ADD,SH2ADD,SH3ADD,SBCLR,SBSET,SBINV,SBEXT,GORC,GREV,CMIX]
-    for ins in range(1):
-        for i in range(1):    
-            mav_putvalue_src1 = 0x0 #random.randint(0,(2**32) - 1)
+    instr = [ORN,XNOR,SLO,SRO,ROL,ROR,SH1ADD,SH2ADD,SH3ADD,SBCLR,SBSET,SBINV,SBEXT,GORC,GREV,CMIX]
+    for ins in instr:
+        for i in range(1000):    
+            mav_putvalue_src1 = 0x1 #random.randint(0,(2**32) - 1)
             mav_putvalue_src2 = 0x1 #random.randint(0,(2**32) - 1)
             mav_putvalue_src3 = 0x1 #random.randint(0,(2**32) - 1)
-            mav_putvalue_instr = ANDN
+            mav_putvalue_instr = ins
 
             # expected output from the model
             expected_mav_putvalue = bitmanip(mav_putvalue_instr, mav_putvalue_src1, mav_putvalue_src2, mav_putvalue_src3)
