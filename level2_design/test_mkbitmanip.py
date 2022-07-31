@@ -93,12 +93,17 @@ def run_test(dut):
     
 
     instr = [ORN,XNOR,SLO,SRO,ROL,ROR,SH1ADD,SH2ADD,SH3ADD,SBCLR,SBSET,SBINV,SBEXT,GORC,GREV,CMIX,CLZ,CTZ,PCNT,SEXTB,SEXTH,CRC32B,CRC32H,CRC32W,CRC32CB,CRC32CH,CRC32CW]
+    instr2 = [CLMUL,CLMULH,CLMULR,MIN,MAX,MINU,MAXU,BDEP,BEXT,PACK,PACKU,PACKH,SHFL,UNSHFL,BFP]
     for ins in instr:
         for i in range(1000):    
+            #dut.RST_N.value <= 0
+            #yield Timer(10) 
+            #dut.RST_N.value <= 1
+            
             mav_putvalue_src1 = random.randint(0,(2**32) - 1)
-            mav_putvalue_src2 = random.randint(0,(2**32) - 1)
+            mav_putvalue_src2 = 0 #random.randint(0,(2**32) - 1)
             mav_putvalue_src3 = random.randint(0,(2**32) - 1)
-            mav_putvalue_instr = ins
+            mav_putvalue_instr = CMOV
 
             # expected output from the model
             expected_mav_putvalue = bitmanip(mav_putvalue_instr, mav_putvalue_src1, mav_putvalue_src2, mav_putvalue_src3)
@@ -110,7 +115,7 @@ def run_test(dut):
             dut.EN_mav_putvalue.value = 1
             dut.mav_putvalue_instr.value = mav_putvalue_instr
         
-            yield Timer(4) 
+            yield Timer(1) 
 
             # obtaining the output
             dut_output = dut.mav_putvalue.value
