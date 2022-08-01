@@ -4,7 +4,7 @@ TOPLEVEL_LANG ?= verilog
 
 PWD=$(shell pwd)
 
-VERILOG_SOURCES = $(PWD)/cordicsqrt.v               # provide your design path
+VERILOG_SOURCES = $(PWD)/cordicsqrt_fix.v               # provide your design path
 
 TOPLEVEL := main          # design file
 MODULE   := test_cordicsqrt    # test file

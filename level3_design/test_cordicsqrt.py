@@ -16,7 +16,6 @@ async def test_main(dut):
 
     cocotb.log.info('#### CTB: Develop your test here! ######')
 
- #   inputs = []
     j = 0
     for i in range(2**16+17):
         await FallingEdge(dut.clk)
