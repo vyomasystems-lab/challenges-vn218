@@ -230,7 +230,7 @@ module main
   wire [$clog2(width)-1:0] index;
   
   //number of right shifts required to scale down the input to the range [0.5,1)
-  wire [$clog2(width)-1:0] init_sf;
+  wire [$clog2(width):0] init_sf;
   assign init_sf = width - index;
   
   //delay line for init_sf. To be used for scaling back up the output
