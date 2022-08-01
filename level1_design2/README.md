@@ -107,10 +107,12 @@ When in state *SEQ_1011*, the state is being changed to *IDLE* irrespective of t
 ## Design Fix
 Updating the design and re-running the test makes the test pass.
 
-![](https://i.imgur.com/5XbL1ZH.png)
+![](https://i.imgur.com/oh52jY7.png)
 
 The updated design is checked in as adder_fix.v
 
 ## Verification Strategy
+Passed a 1000 bit long random sequence of 1s and 0s and checked whether *seq_seen* goes high when the sequence 1011 is entered and whether it remains low otherwise.
 
 ## Is the verification complete ?
+Yes. All possible state transistions have been simulated.
