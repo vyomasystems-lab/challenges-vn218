@@ -118,11 +118,11 @@ def run_test(dut):
             mav_putvalue_src2 = random.randint(0,(2**32) - 1)
             mav_putvalue_src3 = random.randint(0,(2**32) - 1)
             
-            '''
+            
             ins = bin(ins)[2:]
             ins = ins[32-32:32-25] + (bin(random.randint(0,2**5 - 1))[2:]).zfill(5) + ins[32-20:]
             ins = int(str(ins),2)
-            '''
+            
 
             mav_putvalue_instr = ins
 
