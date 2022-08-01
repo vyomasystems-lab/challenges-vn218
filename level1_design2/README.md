@@ -109,7 +109,7 @@ Updating the design and re-running the test makes the test pass.
 
 ![](https://i.imgur.com/oh52jY7.png)
 
-The updated design is checked in as adder_fix.v
+The updated design is checked in as /workspace/challenges-vn218/level1_design2_fix/seq_detect_1011_fix.v
 
 ## Verification Strategy
 Passed a 1000 bit long random sequence of 1s and 0s and checked whether *seq_seen* goes high when the sequence 1011 is entered and whether it remains low otherwise.
