@@ -50,7 +50,7 @@ The inserted bug was
  wire [$clog2(width)-1:0] init_sf;  ====> bug
 
 ```
-*init_sf* can take values from 0 to width. Hence, it's width should be $clog2(width)+1 and not $clog2(width). This bug can be pinpointed because the test fails for N = 2**15, and it's the first value for which *init_sf = width*.
+*init_sf* can take values from 0 to width. Hence, it's width should be $clog2(width)+1 and not $clog2(width). This bug can be pinpointed because the test fails for N >= 2**15, and it's the first value for which *init_sf = width*.
 
 
 ## Design Fix
