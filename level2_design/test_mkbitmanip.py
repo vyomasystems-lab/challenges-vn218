@@ -109,15 +109,15 @@ def run_test(dut):
     instr2 = [CLMUL,CLMULH,CLMULR,MIN,MAX,MINU,MAXU,BDEP,BEXT,PACK,PACKU,PACKH,SHFL,UNSHFL,BFP]
     instr3 = [SLOI,SBCLRI,SBSETI,SBINVI,SBEXTI,SROI,GORCI,GREVI]
     instr4 = [FSRI,SHFLI,UNSHFLI,RORI]
-    for ins in instr2:
+    for ins in instr4:
         for i in range(10000):    
             #dut.RST_N.value <= 0
             #yield Timer(10) 
             #dut.RST_N.value <= 1
             
-            mav_putvalue_src1 = random.randint(0,(2**32) - 1)
-            mav_putvalue_src2 = random.randint(0,(2**32) - 1)
-            mav_putvalue_src3 = random.randint(0,(2**32) - 1)
+            mav_putvalue_src1 = 0#random.randint(0,(2**32) - 1)
+            mav_putvalue_src2 = 0#random.randint(0,(2**32) - 1)
+            mav_putvalue_src3 = 0#random.randint(0,(2**32) - 1)
             
             #random imm gen
             '''
