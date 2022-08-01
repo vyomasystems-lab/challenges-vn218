@@ -26,7 +26,17 @@ async def test_main(dut):
         await RisingEdge(dut.clk)        
         if (dut.out_valid.value):
               out = dut.sqrt.value
+              print(j,out.integer/2**6)
               if (j > 1):
                      error = ((math.sqrt(j) - (out.integer/2**6))/math.sqrt(j))*100
-                     assert error < 1, f"Large error = {error}% for input = {j}"
+                     print(error)
+                     assert error < 1, f"Output is incorrect = {error}"
               j = j+1 
+ #       print(inputs)
+ #       if (len(inputs) > 4):
+ #           if (inputs[-5:-1] == [1,0,1,1]):
+ #               assert dut.seq_seen.value == 1, f"Output is incorrect: {dut.seq_seen.value} != 1"
+ #           else:
+ #               assert dut.seq_seen.value == 0, f"Output is incorrect: {dut.seq_seen.value} != 0"
+ #       else:
+ #               assert dut.seq_seen.value == 0, f"Output is incorrect: {dut.seq_seen.value} != 0"
