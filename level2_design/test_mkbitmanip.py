@@ -90,14 +90,15 @@ def run_test(dut):
     BFP = 0b0100100_00000_00000_111_00000_0110011
 
     SLOI = 0b00100_0000000_00000_001_00000_0010011
-    SROI = 0b00100_0_000000_00000_101_00000_0010011
-    RORI = 0b01100_0_000000_00000_101_00000_0010011
     SBCLRI = 0b01001_0000000_00000_001_00000_0010011
     SBSETI = 0b00101_0000000_00000_001_00000_0010011
     SBINVI = 0b01101_0000000_00000_001_00000_0010011
     SBEXTI = 0b01001_0000000_00000_101_00000_0010011
     SHFLI = 0b000010_000000_00000_001_00000_0010011
     UNSHFLI = 0b000010_000000_00000_101_00000_0010011
+    
+    RORI = 0b01100_0_000000_00000_101_00000_0010011
+    SROI = 0b00100_0_000000_00000_101_00000_0010011
     GORCI = 0b00101_0_000000_00000_101_00000_0010011
     GREVI = 0b01101_0_000000_00000_101_00000_0010011
     FSRI = 0b01101_1_000000_00000_101_00000_0010011
@@ -106,16 +107,24 @@ def run_test(dut):
 
     instr = [ORN,XNOR,SLO,SRO,ROL,ROR,SH1ADD,SH2ADD,SH3ADD,SBCLR,SBSET,SBINV,SBEXT,GORC,GREV,CMIX,CLZ,CTZ,PCNT,SEXTB,SEXTH,CRC32B,CRC32H,CRC32W,CRC32CB,CRC32CH,CRC32CW]
     instr2 = [CLMUL,CLMULH,CLMULR,MIN,MAX,MINU,MAXU,BDEP,BEXT,PACK,PACKU,PACKH,SHFL,UNSHFL,BFP]
-    for ins in instr:
+    instr3 = [SLOI,SBCLRI,SBSETI,SBINVI,SBEXTI,SHFLI,UNSHFLI]
+    for ins in instr3:
         for i in range(1000):    
             #dut.RST_N.value <= 0
             #yield Timer(10) 
             #dut.RST_N.value <= 1
             
             mav_putvalue_src1 = random.randint(0,(2**32) - 1)
-            mav_putvalue_src2 = 0 #random.randint(0,(2**32) - 1)
+            mav_putvalue_src2 = random.randint(0,(2**32) - 1)
             mav_putvalue_src3 = random.randint(0,(2**32) - 1)
-            mav_putvalue_instr = CMOV
+            
+            '''
+            ins = bin(ins)[2:]
+            ins = ins[32-32:32-25] + (bin(random.randint(0,2**5 - 1))[2:]).zfill(5) + ins[32-20:]
+            ins = int(str(ins),2)
+            '''
+
+            mav_putvalue_instr = ins
 
             # expected output from the model
             expected_mav_putvalue = bitmanip(mav_putvalue_instr, mav_putvalue_src1, mav_putvalue_src2, mav_putvalue_src3)
