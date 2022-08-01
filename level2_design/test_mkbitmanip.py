@@ -94,8 +94,8 @@ def run_test(dut):
     SBSETI = 0b00101_0000000_00000_001_00000_0010011
     SBINVI = 0b01101_0000000_00000_001_00000_0010011
     SBEXTI = 0b01001_0000000_00000_101_00000_0010011
-    SHFLI = 0b000010_000000_00000_001_00000_0010011
-    UNSHFLI = 0b000010_000000_00000_101_00000_0010011
+    SHFLI = 0b0000100_00000_00000_001_00000_0010011
+    UNSHFLI = 0b0000100_00000_00000_101_00000_0010011
     
     RORI = 0b01100_0_000000_00000_101_00000_0010011
     SROI = 0b00100_0_000000_00000_101_00000_0010011
@@ -105,11 +105,12 @@ def run_test(dut):
 
     
 
-    instr = [ORN,XNOR,SLO,SRO,ROL,ROR,SH1ADD,SH2ADD,SH3ADD,SBCLR,SBSET,SBINV,SBEXT,GORC,GREV,CMIX,CLZ,CTZ,PCNT,SEXTB,SEXTH,CRC32B,CRC32H,CRC32W,CRC32CB,CRC32CH,CRC32CW]
+    instr = [ANDN,ORN,XNOR,SLO,SRO,ROL,ROR,SH1ADD,SH2ADD,SH3ADD,SBCLR,SBSET,SBINV,SBEXT,GORC,GREV,CMIX,CLZ,CTZ,PCNT,SEXTB,SEXTH,CRC32B,CRC32H,CRC32W,CRC32CB,CRC32CH,CRC32CW]
     instr2 = [CLMUL,CLMULH,CLMULR,MIN,MAX,MINU,MAXU,BDEP,BEXT,PACK,PACKU,PACKH,SHFL,UNSHFL,BFP]
-    instr3 = [SLOI,SBCLRI,SBSETI,SBINVI,SBEXTI,SHFLI,UNSHFLI]
-    for ins in instr3:
-        for i in range(1000):    
+    instr3 = [SLOI,SBCLRI,SBSETI,SBINVI,SBEXTI,SROI,GORCI,GREVI]
+    instr4 = [FSRI,SHFLI,UNSHFLI,RORI]
+    for ins in instr2:
+        for i in range(10000):    
             #dut.RST_N.value <= 0
             #yield Timer(10) 
             #dut.RST_N.value <= 1
@@ -118,10 +119,17 @@ def run_test(dut):
             mav_putvalue_src2 = random.randint(0,(2**32) - 1)
             mav_putvalue_src3 = random.randint(0,(2**32) - 1)
             
-            
-            ins = bin(ins)[2:]
-            ins = ins[32-32:32-25] + (bin(random.randint(0,2**5 - 1))[2:]).zfill(5) + ins[32-20:]
+            #random imm gen
+            '''
+            ins = (bin(ins)[2:]).zfill(32)
+            ins = ins[32-32:32-25] + (bin(random.randint(0,2*5 - 1))[2:]).zfill(5) + ins[32-20:]
             ins = int(str(ins),2)
+            '''
+            '''
+            ins = (bin(ins)[2:]).zfill(32)
+            ins = ins[32-32:32-26] + (bin(random.randint(0,2**6 - 1))[2:]).zfill(6) + ins[32-20:]
+            ins = int(str(ins),2)
+            '''
             
 
             mav_putvalue_instr = ins
@@ -136,7 +144,7 @@ def run_test(dut):
             dut.EN_mav_putvalue.value = 1
             dut.mav_putvalue_instr.value = mav_putvalue_instr
         
-            yield Timer(1) 
+            yield Timer(10) 
 
             # obtaining the output
             dut_output = dut.mav_putvalue.value
@@ -145,5 +153,7 @@ def run_test(dut):
             cocotb.log.info(f'EXPECTED OUTPUT={hex(expected_mav_putvalue)}')
             
             # comparison
-            error_message = f'Value mismatch DUT = {hex(dut_output)} does not match MODEL = {hex(expected_mav_putvalue)} for inputs \n mav_putvalue_src1 = {hex(mav_putvalue_src1)} \n mav_putvalue_src2 = {hex(mav_putvalue_src2)} \n mav_putvalue_src3 = {hex(mav_putvalue_src3)} '
+            error_message = f'Value mismatch DUT = {hex(dut_output)} does not match MODEL = {hex(expected_mav_putvalue)} for inputs \n mav_putvalue_src1 = {hex(mav_putvalue_src1)} \n mav_putvalue_src2 = {hex(mav_putvalue_src2)} \n mav_putvalue_src3 = {hex(mav_putvalue_src3)} \n mav_putvalue_instr = {hex(mav_putvalue_instr)} '
             assert dut_output == expected_mav_putvalue, error_message
+            
+            yield Timer(10)
